@@ -11,7 +11,7 @@ module.exports = {
         .then(function(response){
             return response.data;
         },error=>{
-          console.log(error);
+          console.log('api error');
         });
    }
 }
