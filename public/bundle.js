@@ -109,7 +109,8 @@
 	      temp_c: '',
 	      humid_pct: '',
 	      longitude: '',
-	      latitude: ''
+	      latitude: '',
+	      time: ''
 
 	    };
 	    return _this;
@@ -147,12 +148,15 @@
 	      }).then(function (weather) {
 
 	        //save date in state and render it
+	        console.log(weather['temp_c']);
 	        _this3.setState({ wx_desc: JSON.stringify(weather['wx_desc']) });
 	        _this3.setState({ temp_c: JSON.stringify(weather['temp_c']) });
 	        _this3.setState({ humid_pct: JSON.stringify(weather['humid_pct']) });
 	      }).then(function () {
 	        //print the update time
+	        var t = new Date().toJSON();
 	        console.log('last update at:', new Date());
+	        _this3.setState({ time: t });
 	      });
 	    }
 	  }, {
@@ -213,6 +217,11 @@
 	                  )
 	                )
 	              )
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              this.state.time
 	            )
 	          ),
 	          _react2.default.createElement('script', { src: './bundle.js' })
@@ -19923,13 +19932,15 @@
 
 	module.exports = {
 	  fetchWeather: function fetchWeather(lat, lon) {
-
+	    lat = parseFloat(lat).toFixed(0);
+	    lon = parseFloat(lat).toFixed(0);
 	    var encodedURI = encodeURI('https://api.weatherunlocked.com/api/current/' + lat + ',' + lon + '?app_id=8f454b23&app_key=32e2f0707008d6166232bfc834c9fdd1');
+	    //  console.log(i);
 	    return axios.get(encodedURI).then(function (response) {
 	      return response.data;
 	    }, function (error) {
-	      alert('api error function');
-	      console.log(error);
+	      // alert('api error function');
+	      console.log('api error', error);
 	    });
 	  }
 	};

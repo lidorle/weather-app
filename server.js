@@ -15,6 +15,14 @@ var page = require('./src/page.jsx').default;
 //set static files folder
 app.use(express.static('public'));
 
+//eneble Access-Control-Allow-Origin
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Methods",'GET,POST','DELETE');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 app.get('/',function(request,response){
 
@@ -25,6 +33,8 @@ app.get('/',function(request,response){
 	);
 	response.send(html);
 });
+
+
 
 // define port
 var PORT = 3000;

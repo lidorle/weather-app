@@ -20,6 +20,7 @@ export default class page extends React.Component{
         humid_pct:'',
         longitude:'',
         latitude:'',
+        time:''
 
       };
   }
@@ -57,13 +58,16 @@ componentDidMount(){
         }).then((weather)=>{
 
              //save date in state and render it
+             console.log(weather['temp_c']);
               this.setState({wx_desc: JSON.stringify(weather['wx_desc'])});
              this.setState({temp_c: JSON.stringify(weather['temp_c'])});
              this.setState({humid_pct: JSON.stringify(weather['humid_pct'])});
 
            }).then(()=>{
              //print the update time
+             let t =new Date().toJSON();
              console.log('last update at:',new Date());
+             this.setState({time:t});
            });
 
 
@@ -92,6 +96,7 @@ componentDidMount(){
                           </tr>
                         </tbody>
                       </table>
+                      <p>{this.state.time}</p>
   								</div>
   			 			<script src='./bundle.js' />
   					   </body>
