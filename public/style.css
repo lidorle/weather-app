@@ -1,0 +1,20 @@
+body{
+        padding:150px;
+        font: 14px "Lucida Grande", Helvetica,Arial;
+        background-color: #000000;
+}
+
+th{
+  padding:10px;
+  border-left: 1px solid #cdd0d4;
+}
+th{
+  color:#FFFFFF;
+}
+h1{
+  color:#FFFFFF;
+
+}
+th:hover{
+  color: yellow;
+}
