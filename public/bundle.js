@@ -54,9 +54,12 @@
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(186);
-	// var page = require('./src/page.jsx');
 
+
+	//define porps var
 	var props = window.PROPS;
+
+	// render the top level Component
 	ReactDOM.render(React.createElement(_page2.default, props), document);
 
 /***/ },
@@ -91,13 +94,16 @@
 	var page = function (_React$Component) {
 	  _inherits(page, _React$Component);
 
+	  //Component constructor
 	  function page(props) {
 	    _classCallCheck(this, page);
 
+	    //bind functions
 	    var _this = _possibleConstructorReturn(this, (page.__proto__ || Object.getPrototypeOf(page)).call(this, props));
 
 	    _this.UpDateWeather = _this.UpDateWeather.bind(_this);
 
+	    //define state variables
 	    _this.state = {
 	      wx_desc: '',
 	      temp_c: '',
@@ -110,34 +116,42 @@
 	  }
 
 	  _createClass(page, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      navigator.geolocation.getCurrentPosition(function (position) {
+	        var lon = JSON.stringify(position.coords.longitude);
+	        var lat = JSON.stringify(position.coords.latitude);
+	        _this2.setState({ longitude: lon });
+	        _this2.setState({ latitude: lat });
+	        _this2.UpDateWeather();
+	      }, function (error) {
+	        console.log('navigator error', error);
+	      });
+	    }
+	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.UpDateWeather();
 
-	      //    navigator.geolocation.getCurrentPosition(
-	      //      (position) => {
-	      //
-	      //    this.setState({latitude:position.latitude});
-	      //    this.setState({longitude:JSON.stringify(position.longitude)});
-	      //    console.log(this.state.latitude)
-	      //
-	      //  });
-
-	      this.timerId = setInterval(this.UpDateWeather, 60000);
+	      setInterval(this.UpDateWeather, 20000);
 	    }
 	  }, {
 	    key: 'UpDateWeather',
 	    value: function UpDateWeather() {
-	      var _this2 = this;
+	      var _this3 = this;
 
-	      _api2.default.fetchWeather().then(function (weather) {
-	        console.log('weather object', weather);
+	      //fech data from server
+	      _api2.default.fetchWeather(this.state.latitude, this.state.longitude).then(function (weather) {
 	        return weather;
 	      }).then(function (weather) {
-	        _this2.setState({ wx_desc: JSON.stringify(weather['wx_desc']) });
-	        _this2.setState({ temp_c: JSON.stringify(weather['temp_c']) });
-	        _this2.setState({ humid_pct: JSON.stringify(weather['humid_pct']) });
+
+	        //save date in state and render it
+	        _this3.setState({ wx_desc: JSON.stringify(weather['wx_desc']) });
+	        _this3.setState({ temp_c: JSON.stringify(weather['temp_c']) });
+	        _this3.setState({ humid_pct: JSON.stringify(weather['humid_pct']) });
 	      }).then(function () {
+	        //print the update time
 	        console.log('last update at:', new Date());
 	      });
 	    }
@@ -166,7 +180,7 @@
 	            _react2.default.createElement(
 	              'h1',
 	              null,
-	              'weather app'
+	              'Weather Forecast'
 	            ),
 	            _react2.default.createElement(
 	              'table',
@@ -194,7 +208,8 @@
 	                    'th',
 	                    null,
 	                    'humidity level: ',
-	                    this.state.humid_pct
+	                    this.state.humid_pct,
+	                    '%'
 	                  )
 	                )
 	              )
@@ -19903,16 +19918,18 @@
 
 	'use strict';
 
+	// Adding the required Modules
 	var axios = __webpack_require__(160);
 
 	module.exports = {
-	  fetchWeather: function fetchWeather() {
+	  fetchWeather: function fetchWeather(lat, lon) {
 
-	    var encodedURI = encodeURI("https://api.weatherunlocked.com/api/current/51.5,-0.1?app_id=8f454b23&app_key=32e2f0707008d6166232bfc834c9fdd1");
-
+	    var encodedURI = encodeURI('https://api.weatherunlocked.com/api/current/' + lat + ',' + lon + '?app_id=8f454b23&app_key=32e2f0707008d6166232bfc834c9fdd1');
 	    return axios.get(encodedURI).then(function (response) {
-	      console.log(response.headers['user-agent']);
 	      return response.data;
+	    }, function (error) {
+	      alert('api error function');
+	      console.log(error);
 	    });
 	  }
 	};
